@@ -7,20 +7,28 @@ class CourseSerializers(serializers.Serializer):
     name = serializers.CharField()
     hours = serializers.CharField(source='coursedetail.hours')
     level = serializers.CharField(source='get_level_display')
-    recommend_courses = serializers.SerializerMethodField()
+    # price_list = serializers.CharField(source='price_policy.all.price')
+    price_list = serializers.SerializerMethodField()
 
 
-    def get_recommend_courses(self, row):
-        # print('row', row)
-        # print(123)
+    def get_price_list(self, row):
+        price_list = row.price_policy.all()
+        return [{'price':item.price,'id':item.id} for item in price_list]
 
-        print(row,type(row),'2222222222222')
-        print(row.coursedetail,'______-------')
-        recommend_list = row.coursedetail.recommend_courses.all()
-        # print(321)
-        # print(recommend_list)
-        print([{'id': item.id, 'name': item.name} for item in recommend_list])
-        return [{'id': item.id, 'name': item.name} for item in recommend_list]
+    # recommend_courses = serializers.SerializerMethodField()
+    #
+    #
+    # def get_recommend_courses(self, row):
+    #     # print('row', row)
+    #     # print(123)
+    #
+    #     print(row,type(row),'2222222222222')
+    #     print(row.coursedetail,'______-------')
+    #     recommend_list = row.coursedetail.all().recommend_courses.all()
+    #     # print(321)
+    #     # print(recommend_list)
+    #     print([{'id': item.id, 'name': item.name} for item in recommend_list])
+    #     return [{'id': item.id, 'name': item.name} for item in recommend_list]
 
 
 class CourseModelSerializer(serializers.ModelSerializer):
